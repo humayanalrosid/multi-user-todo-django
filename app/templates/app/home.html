@@ -1,0 +1,96 @@
+{% extends 'app/base.html' %}
+
+{% block page %}Home{% endblock  %}
+
+{% block content %}
+
+<div class="row p-2">
+    <div class="col-lg-4 mx-auto p-0 mb-5">
+
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %} 
+        <div class="shadow">
+            <div class="text-center mb-3">
+                <h1 class="alert alert-info">Add Todos</h1>
+            </div>
+        
+            <div class="p-4">
+
+                <form action="" method="POST" novalidate>
+                    {% csrf_token %}
+        
+                    {% for data in form %}
+                        <div class="form-group mb-3">
+                            {{ data.label_tag }}
+                            {{ data }}
+                            <span class="text-warning">{{ data.errors | striptags}}</span>
+                        </div>
+                    {% endfor %}
+        
+                    <input type="submit" value="Create" class="btn btn-info btn-sm text-white">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col p-0">
+        <div class="col-lg-10 mx-auto">
+
+            {% if todos %}     
+                <div class="text-center mb-3">
+                    <h3 class="fw-bold">Your Todos </h3>
+                </div>
+                <table class="table border text-center">
+                    <thead>
+                    <tr class="alert alert-success">
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for todo in todos %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ todo.title | title }}</td>
+                                <td>
+                                    {% if todo.status == 'P' %}
+                                        <p class="text-warning">Pending</p>
+                                    {% else %}
+                                        <p class="text-success">Complete</p>
+                                    {% endif %}
+                                </td>
+                                <td>{{ todo.priority }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-around">
+                                        <a href="{% url 'delete' todo.id %}" title="Delete" class="text-danger fs-5"><i class="bi bi-trash"></i></a>
+                                        {% if todo.status == 'P' %}
+                                            <a href="{% url 'status' todo.id 'C' %}" title="Mark as Done" class="text-success fs-5"><i class="bi bi-check-lg"></i></a>
+                                        {% else %}
+                                            <a href="{% url 'status' todo.id 'P' %}" title="Pending" class="text-warning fs-5"><i class="bi bi-clock-history"></i></a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr> 
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="p-4">
+                    <div class="text-center alert alert-warning">
+                        <p class="fw-bold display-6">You don't have any Todos.</p>
+                    </div>
+                </div>
+            {% endif %}
+        <div>
+    </div>
+
+</div>
+{% endblock  %}

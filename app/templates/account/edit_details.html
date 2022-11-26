@@ -1,0 +1,31 @@
+{% extends 'app/base.html' %}
+
+{% block page %}Edit Profile{% endblock  %}
+
+{% block content %}
+
+<div class="col-lg-4 shadow mx-auto">
+    <div class="text-center mb-3">
+        <h1 class="alert alert-info">Edit Profile</h1>
+    </div>
+
+    <div class="p-4">
+        <form action="" method="POST" novalidate>
+            {% csrf_token %}
+
+            {% for data in form %}
+                <div class="form-group mb-3">
+                        {{ data.label_tag }}
+                        {{ data }}
+                        <span class="text-danger">{{ data.errors | striptags }}</span>
+                </div>
+            {% endfor %}
+
+            <input type="submit" value="Update" class="btn btn-info btn-sm text-white">
+            <a href="{% url 'home' %}" class="btn btn-primary btn-sm">Back to Home</a>
+        </form>
+
+    </div>
+</div>
+
+{% endblock  %}
